@@ -21,14 +21,18 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.miguelhenrique.todosimple.models.Task;
 import com.miguelhenrique.todosimple.services.TaskService;
+import com.miguelhenrique.todosimple.services.UserSevice;
 
 @RestController
 @RequestMapping("/task")
 @Validated
 public class TaskController {
-    
+
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private UserSevice userSevice;
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id) {
@@ -38,16 +42,17 @@ public class TaskController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId) {
+        this.userSevice.findById(userId);
         List<Task> objs = this.taskService.findAllByUserId(userId);
         return ResponseEntity.ok().body(objs);
-    } 
+    }
 
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody Task obj) {
         this.taskService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
-    } 
+    }
 
     @PutMapping("/{id}")
     @Validated
