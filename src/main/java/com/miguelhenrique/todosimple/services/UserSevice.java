@@ -25,6 +25,7 @@ public class UserSevice {
     @Transactional
     public User create(User obj) {
         obj.setId(null);
+        obj = this.userRepository.save(obj);
         return obj;
     }
 
