@@ -14,11 +14,11 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JWTUtil {
-    
-    @Value("${jwt.secret}")
+
+    @Value("${security.jwt.secret")
     private String secret;
 
-    @Value("${jwt.expiration}")
+    @Value("${security.jwt.expiration}")
     private Long expiration;
 
     public String generateToken(String username) {
@@ -29,7 +29,7 @@ public class JWTUtil {
                 .signWith(key)
                 .compact();
     }
-    
+
     private SecretKey getKeyBySecret() {
         SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
         return key;
@@ -37,7 +37,6 @@ public class JWTUtil {
 
     public boolean isValidToken(String token) {
         Claims claims = getClaims(token);
-
         if (Objects.nonNull(claims)) {
             String username = claims.getSubject();
             Date expirationDate = claims.getExpiration();
@@ -45,13 +44,11 @@ public class JWTUtil {
             if (Objects.nonNull(username) && Objects.nonNull(expirationDate) && now.before(expirationDate))
                 return true;
         }
-
         return false;
     }
 
     private Claims getClaims(String token) {
         SecretKey key = getKeyBySecret();
-
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         } catch (Exception e) {
