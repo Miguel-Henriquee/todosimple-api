@@ -24,7 +24,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private JWTUtil jwtUtil;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    public JWTAuthenticationFilter (AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
         setAuthenticationFailureHandler(new GlobalExceptionHandler());
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
@@ -40,14 +40,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     userCredentials.getUsername(), userCredentials.getPassword(), new ArrayList<>());
 
             Authentication authentication = this.authenticationManager.authenticate(authToken);
-            System.out.println(authentication.getCredentials());
             return authentication;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    //TODO: Falha na autenticação com username e password corretas
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
             HttpServletResponse response, FilterChain filterChain, Authentication authentication)

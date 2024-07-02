@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.miguelhenrique.todosimple.models.User;
 // import com.miguelhenrique.todosimple.services.exceptions.AuthorizationException;
 import com.miguelhenrique.todosimple.services.exceptions.DataBindingViolationException;
 import com.miguelhenrique.todosimple.services.exceptions.ObjectNotFoundException;
@@ -155,6 +157,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler imple
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
         Integer status = HttpStatus.UNAUTHORIZED.value();
+        System.out.println(exception);
         response.setStatus(status);
         response.setContentType("application/json");
         ErrorResponse errorResponse = new ErrorResponse(status, "Username or password are invalid");

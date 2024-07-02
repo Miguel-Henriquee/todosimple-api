@@ -15,24 +15,24 @@ import com.miguelhenrique.todosimple.models.enums.ProfileEnum;
 
 @NoArgsConstructor
 @Getter
-public class UserSpringSecurity implements UserDetails{
-    
+public class UserSpringSecurity implements UserDetails {
+
     private Long id;
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-
     public UserSpringSecurity(Long id, String username, String password, Set<ProfileEnum> profileEnums) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.authorities = profileEnums.stream().map(x -> new SimpleGrantedAuthority(x.getDescription())).collect(Collectors.toList());
+        this.authorities = profileEnums.stream().map(x -> new SimpleGrantedAuthority(x.getDescription()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean isAccountNonExpired() {
-       return true;
+        return true;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserSpringSecurity implements UserDetails{
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
@@ -53,5 +53,5 @@ public class UserSpringSecurity implements UserDetails{
     public boolean hasRole(ProfileEnum profileEnum) {
         return getAuthorities().contains(new SimpleGrantedAuthority(profileEnum.getDescription()));
     }
-    
+
 }

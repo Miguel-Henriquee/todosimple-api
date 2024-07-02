@@ -30,7 +30,7 @@ public class SecurityConfig {
     private AuthenticationManager authenticationManager;
     
     @Autowired
-    private UserDetailsService userDatilsService;
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private JWTUtil jwtUtil;
@@ -49,18 +49,16 @@ public class SecurityConfig {
         http.cors().and().csrf().disable();
 
         AuthenticationManagerBuilder authenticationManagerBuilder = http
-            .getSharedObject(AuthenticationManagerBuilder.class);
-
-        authenticationManagerBuilder.userDetailsService(this.userDatilsService)
-            .passwordEncoder(bCryptPasswordEncoder());
+                        .getSharedObject(AuthenticationManagerBuilder.class);
+            authenticationManagerBuilder.userDetailsService(this.userDetailsService)
+                        .passwordEncoder(bCryptPasswordEncoder());
 
         this.authenticationManager = authenticationManagerBuilder.build();
 
-        http.authorizeHttpRequests()
+        http.authorizeRequests()
             .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
             .antMatchers(PUBLIC_MATCHERS).permitAll()
-            .anyRequest().authenticated()
-            .and()
+            .anyRequest().authenticated().and()
             .authenticationManager(authenticationManager);
 
         http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
@@ -73,7 +71,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
