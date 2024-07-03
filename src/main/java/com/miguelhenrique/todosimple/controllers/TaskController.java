@@ -31,19 +31,21 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @Autowired
-    private UserSevice userSevice;
-
     @GetMapping("/{id}")
     public ResponseEntity<Task> findById(@PathVariable Long id) {
         Task obj = this.taskService.findById(id);
         return ResponseEntity.ok(obj);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId) {
-        this.userSevice.findById(userId);
-        List<Task> objs = this.taskService.findAllByUserId(userId);
+    @GetMapping("/user")
+    public ResponseEntity<List<Task>> findAllByUser() {
+        List<Task> objs = this.taskService.findAllByUser();
+        return ResponseEntity.ok().body(objs);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Task>> findAll() {
+        List<Task> objs = this.taskService.findAll();
         return ResponseEntity.ok().body(objs);
     }
 
