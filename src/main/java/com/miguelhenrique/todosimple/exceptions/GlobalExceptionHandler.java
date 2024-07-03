@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.miguelhenrique.todosimple.models.User;
 import com.miguelhenrique.todosimple.services.exceptions.AuthorizationException;
 import com.miguelhenrique.todosimple.services.exceptions.DataBindingViolationException;
 import com.miguelhenrique.todosimple.services.exceptions.ObjectNotFoundException;

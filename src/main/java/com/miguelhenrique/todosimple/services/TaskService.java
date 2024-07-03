@@ -2,16 +2,15 @@ package com.miguelhenrique.todosimple.services;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.miguelhenrique.todosimple.models.Task;
 import com.miguelhenrique.todosimple.models.User;
 import com.miguelhenrique.todosimple.models.enums.ProfileEnum;
+import com.miguelhenrique.todosimple.models.projection.TaskProjection;
 import com.miguelhenrique.todosimple.repositories.TaskRepository;
 import com.miguelhenrique.todosimple.security.UserSpringSecurity;
 import com.miguelhenrique.todosimple.services.exceptions.AuthorizationException;
@@ -40,13 +39,13 @@ public class TaskService {
         return task;
     }
 
-    public List<Task> findAllByUser() {
+    public List<TaskProjection> findAllByUser() {
         UserSpringSecurity userSpringSecurity = UserSevice.authenticated();
 
         if (Objects.isNull(userSpringSecurity))
             throw new AuthorizationException("Acesso negado!");
         
-        List<Task> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId());
+        List<TaskProjection> tasks = this.taskRepository.findByUser_Id(userSpringSecurity.getId());
         return tasks;
     }
 
