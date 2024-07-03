@@ -1,15 +1,18 @@
 package com.miguelhenrique.todosimple.services;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.miguelhenrique.todosimple.models.Task;
 import com.miguelhenrique.todosimple.models.User;
 import com.miguelhenrique.todosimple.repositories.TaskRepository;
+import com.miguelhenrique.todosimple.security.UserSpringSecurity;
 import com.miguelhenrique.todosimple.services.exceptions.DataBindingViolationException;
 import com.miguelhenrique.todosimple.services.exceptions.ObjectNotFoundException;
 
@@ -23,10 +26,16 @@ public class TaskService {
     private UserSevice userSevice;
 
     public Task findById(Long id) {
-        Optional<Task> task = this.taskRepository.findById(id);
-        return task.orElseThrow(() -> new ObjectNotFoundException(
+        Task task = this.taskRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
             "Tarefa não encontrada! ID: " + id + ", Tipo: " + Task.class.getName()
         ));
+
+        UserSpringSecurity userSpringSecurity = UserSevice.authenticated();
+
+        if (Objects.isNull(userSpringSecurity))
+           
+
+        return task;
     }
 
     public List<Task> findAllByUserId(Long userId) {
@@ -58,6 +67,10 @@ public class TaskService {
         } catch (Exception e) {
             throw new DataBindingViolationException("Não é possível excluir pois há entidades relacionadas!");
         }
+    }
+
+    private boolean userHasTask(UserSpringSecurity userSpringSecurity, Task task) {
+        return task.getUser().getId().equals(userSpringSecurity.getId());
     }
  
 }
